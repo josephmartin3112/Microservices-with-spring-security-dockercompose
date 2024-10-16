@@ -1,0 +1,50 @@
+services:
+  eureka-sr:
+    image: eureka-server
+    build: ./Eurekaserver/Eurekaserver
+    ports:
+      - "8761:8761"
+    networks:
+      - app-network
+  gateway-sr:
+    image: gateway-service
+    build: ./Gateway
+    ports:
+      - "8222:8222"
+    networks:
+      - app-network
+    depends_on:
+      - eureka-sr
+  security-sr:
+    image: authentication-service
+    build: ./SpringSecurity
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
+    depends_on:
+      - eureka-sr
+      - gateway-sr
+  employee-sr:
+    image: employee-service
+    build: ./Employeeinfo/Employeeinfo
+    ports:
+      - "9092:9092"
+    networks:
+      - app-network
+    depends_on:
+      - eureka-sr
+      - gateway-sr
+  project-sr:
+    image: project-service
+    build: ./Projectinfo/Projectinfo
+    ports:
+      - "9091:9091"
+    networks:
+      - app-network
+    depends_on:
+      - eureka-sr
+      - gateway-sr
+
+networks:
+  app-network:
